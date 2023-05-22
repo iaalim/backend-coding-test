@@ -1,0 +1,154 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: Ride API
+  description: API documentation for the Ride service
+paths:
+  /health:
+    get:
+      summary: Check server health
+      responses:
+        "200":
+          description: Server is healthy
+  /rides:
+    post:
+      summary: Create a new ride
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RideInput"
+      responses:
+        "200":
+          description: Ride created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ride"
+        "400":
+          description: Invalid request or missing required fields
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Unknown server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    get:
+      summary: Get all rides
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Ride"
+        "500":
+          description: Unknown server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /rides/{id}:
+    get:
+      summary: Get a ride by ID
+      parameters:
+        - name: id
+          in: path
+          description: ID of the ride to retrieve
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ride"
+        "400":
+          description: Invalid ride ID
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Ride not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Unknown server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+    RideInput:
+      type: object
+      properties:
+        start_lat:
+          type: number
+          format: double
+          minimum: -90
+          maximum: 90
+        start_long:
+          type: number
+          format: double
+          minimum: -180
+          maximum: 180
+        end_lat:
+          type: number
+          format: double
+          minimum: -90
+          maximum: 90
+        end_long:
+          type: number
+          format: double
+          minimum: -180
+          maximum: 180
+        rider_name:
+          type: string
+          minLength: 1
+        driver_name:
+          type: string
+          minLength: 1
+        driver_vehicle:
+          type: string
+          minLength: 1
+    Ride:
+      type: object
+      properties:
+        start_lat:
+          type: number
+          format: double
+        start_long:
+          type: number
+          format: double
+        end_lat:
+          type: number
+          format: double
+        end_long:
+          type: number
+          format: double
+        rider_name:
+          type: string
+        driver_name:
+          type: string
+        driver_vehicle:
+          type: string
+    Error:
+      type: object
+      properties:
+        error_code:
+          type: string
+        message:
+          type: string
