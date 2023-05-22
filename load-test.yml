@@ -1,0 +1,24 @@
+config:
+  target: "http://localhost:8010"
+  phases:
+    - duration: 30
+      arrivalRate: 100
+  defaults:
+    headers:
+      User-Agent: "Artillery"
+scenarios:
+  - flow:
+      - get:
+          url: "/health"
+      - get:
+          url: "/rides"
+      - post:
+          url: "/rides"
+          json:
+            start_lat: 0
+            start_long: 0
+            end_lat: 1
+            end_long: 1
+            rider_name: "Aalim"
+            driver_name: "Rohit"
+            driver_vehicle: "Car"
